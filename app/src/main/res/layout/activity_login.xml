@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background2">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@color/overlay_vineopa"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp"
+        tools:ignore="ExtraText">
+
+        <!-- Logo -->
+        <ImageView
+            android:id="@+id/splash_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="89dp"
+            android:layout_marginBottom="10dp"
+            android:contentDescription="Logo Nocturna Brew"
+            android:src="@drawable/logo_NB" />
+
+        <!-- Texto debajo del logo -->
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="372dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="@font/playfair_display_bold"
+            android:gravity="center"
+            android:text="LOG IN"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="34sp" />
+
+        <!-- Botón Sign up -->
+        <EditText
+            android:id="@+id/editTextTextEmailAddress"
+            android:background="@drawable/edittext_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/playfair_display"
+            android:ems="10"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:textColorHint="@color/beige" />
+
+        <EditText
+            android:id="@+id/editTextTextPassword"
+            android:background="@drawable/edittext_background"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/playfair_display"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:textColorHint="@color/beige"/>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/playfair_display"
+            android:textAlignment="center"
+            android:textColor="@color/beige"
+            tools:text="Forgot Password" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="143dp"
+            android:layout_height="wrap_content"
+            android:text="Log in"
+            android:textColor="@color/dark_brown"
+            android:fontFamily="@font/playfair_display"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/beige" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/playfair_display"
+            android:textAlignment="center"
+            android:textColor="@color/beige"
+            android:textStyle="italic"
+            tools:text="If you don’t have an account, click here" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

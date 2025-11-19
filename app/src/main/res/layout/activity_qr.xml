@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background1"
+    android:gravity="center">
+
+    <!-- Logo de Nocturna Brew -->
+    <LinearLayout
+        android:id="@+id/logo_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="60dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/logo_text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/playfair_display_bold"
+            android:text="NOCTURNA"
+            android:textColor="#FFFFFF"
+            android:textSize="36sp" />
+
+        <TextView
+            android:id="@+id/logo_text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/playfair_display_bold"
+            android:text="BREW"
+            android:textColor="#FFFFFF"
+            android:textSize="32sp" />
+    </LinearLayout>
+
+    <!-- Cuadro beige centrado con QR -->
+    <LinearLayout
+        android:id="@+id/qr_card"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@color/overlay_beigeopa"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="28dp">
+
+        <!-- Folio -->
+        <TextView
+            android:id="@+id/folio_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FOLIO: 01111"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:fontFamily="@font/playfair_display"
+            android:layout_marginBottom="16dp" />
+
+        <!-- QR -->
+        <ImageView
+            android:id="@+id/qr_image"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@drawable/qr"
+            android:contentDescription="Código QR"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter" />
+
+    </LinearLayout>
+
+</RelativeLayout>

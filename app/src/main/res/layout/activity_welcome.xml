@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background2">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@color/overlay_vineopa"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp"
+        tools:ignore="ExtraText">
+
+        <!-- Logo -->
+        <ImageView
+            android:id="@+id/splash_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="89dp"
+            android:layout_marginBottom="10dp"
+            android:contentDescription="Logo Nocturna Brew"
+            android:src="@drawable/NB_Logo" />
+
+        <!-- Texto debajo del logo -->
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="372dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="La perfecta armonía de postres, bebidas y tentaciones que tu noche merece."
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:fontFamily="@font/playfair_display"
+            android:textSize="16sp" />
+
+        <!-- Botón Sign up -->
+        <Button
+            android:id="@+id/button"
+            android:layout_width="143dp"
+            android:layout_height="wrap_content"
+            android:text="Sign up"
+            android:textColor="@color/dark_brown"
+            android:fontFamily="@font/playfair_display"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/beige" />
+
+        <!-- Botón Login -->
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="144dp"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:textColor="@color/dark_brown"
+            android:fontFamily="@font/playfair_display"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/beige" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

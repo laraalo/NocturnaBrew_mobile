@@ -1,0 +1,11 @@
+<resources>
+    <color name="wine">#7b2c2c</color>
+    <color name="beige">#d8cbbd</color>
+    <color name="dark_brown">#2b0b0b</color>
+    <color name="light_beige">#f3e9df</color>
+    <color name="muted_brown">#b1a193</color>
+    <color name="overlay_80">#99000000</color>
+    <color name="overlay_vine">#DD2B0B0B</color>
+    <color name="overlay_vineopa">#BB2B0B0B</color>
+    <color name="overlay_beigeopa">#B7F3E9DF</color>
+</resources>
