@@ -22,8 +22,7 @@
             android:layout_height="89dp"
             android:layout_marginBottom="10dp"
             android:contentDescription="Logo Nocturna Brew"
-            android:src="@drawable/logo_NB" />
-
+            android:src="@drawable/logo_nb" />
         <!-- Texto debajo del logo -->
         <TextView
             android:id="@+id/textView"
