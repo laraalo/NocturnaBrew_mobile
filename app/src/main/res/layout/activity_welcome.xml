@@ -39,7 +39,7 @@
 
         <!-- Botón Sign up -->
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonSignUp"
             android:layout_width="143dp"
             android:layout_height="wrap_content"
             android:text="Sign up"
@@ -51,7 +51,7 @@
 
         <!-- Botón Login -->
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/buttonLogin"
             android:layout_width="144dp"
             android:layout_height="wrap_content"
             android:text="Login"
