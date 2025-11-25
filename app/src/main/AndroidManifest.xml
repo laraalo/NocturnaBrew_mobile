@@ -16,6 +16,9 @@
         android:theme="@style/Theme.NocturnaBrew_mobile"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".MenuActivity"
+            android:exported="false" />
+        <activity
             android:name=".SignUpActivity"
             android:exported="false" />
         <activity

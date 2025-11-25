@@ -15,6 +15,7 @@
         android:padding="32dp"
         tools:ignore="ExtraText">
 
+
         <!-- Logo -->
         <ImageView
             android:id="@+id/splash_logo"
@@ -25,19 +26,21 @@
             android:src="@drawable/nb_logo" />
 
         <!-- Texto debajo del logo -->
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="372dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:text="La perfecta armonía de postres, bebidas y tentaciones que tu noche merece."
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:fontFamily="@font/playfair_display"
-            android:textSize="16sp" />
 
         <!-- Botón Sign up -->
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="362dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="@font/playfair_display"
+            android:gravity="center"
+            android:text="The ideal blend of desserts, drinks, and indulgences your night deserves.."
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
         <Button
             android:id="@+id/buttonSignUp"
             android:layout_width="143dp"

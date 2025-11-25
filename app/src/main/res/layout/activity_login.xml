@@ -38,7 +38,7 @@
 
         <!-- Botón Sign up -->
         <EditText
-            android:id="@+id/editTextTextEmailAddress"
+            android:id="@+id/EmailLogin"
             android:background="@drawable/edittext_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,20 +46,22 @@
             android:fontFamily="@font/playfair_display"
             android:ems="10"
             android:hint="Email"
+            android:textColorHint="@color/beige"
             android:inputType="textEmailAddress"
-            android:textColorHint="@color/beige" />
+            android:textColor="@color/beige"/>
 
         <EditText
-            android:id="@+id/editTextTextPassword"
-            android:background="@drawable/edittext_background"
+            android:id="@+id/PasswordLogin"
             android:layout_width="match_parent"
-            android:layout_marginBottom="10dp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/playfair_display"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/edittext_background"
             android:ems="10"
+            android:fontFamily="@font/playfair_display"
             android:hint="Password"
             android:inputType="textPassword"
-            android:textColorHint="@color/beige"/>
+            android:textColor="@color/beige"
+            android:textColorHint="@color/beige" />
 
         <TextView
             android:id="@+id/textView2"
@@ -71,10 +73,21 @@
             tools:text="Forgot Password" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonEnter"
             android:layout_width="143dp"
             android:layout_height="wrap_content"
             android:text="Log in"
+            android:textColor="@color/dark_brown"
+            android:fontFamily="@font/playfair_display"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/beige" />
+
+        <Button
+            android:id="@+id/buttonBack"
+            android:layout_width="143dp"
+            android:layout_height="wrap_content"
+            android:text="Back"
             android:textColor="@color/dark_brown"
             android:fontFamily="@font/playfair_display"
             android:layout_marginTop="10dp"
