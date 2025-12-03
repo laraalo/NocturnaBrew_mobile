@@ -21,7 +21,7 @@ android {
 
     buildTypes {
         getByName("debug") {
-            buildConfigField("String", "BASE_URL", "\"https://unmiasmic-landen-interadditive.ngrok-free.dev/\"")
+            buildConfigField("String", "BASE_URL", "\"https://unjust-tamisha-undeferrably.ngrok-free.dev/\"")
             buildConfigField("String", "AppToken", "\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHAiOiJNeUFwcCIsImlhdCI6MTc2Mzg2MDg3MH0.xIuM-v4X9b9sZu6a2oS3MAzj9iKKos3Y73xgj7BBYSg\"")
         }
 

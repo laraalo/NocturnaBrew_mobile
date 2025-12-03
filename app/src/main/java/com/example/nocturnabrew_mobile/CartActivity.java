@@ -5,18 +5,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.nocturnabrew_mobile.adapters.CartManager;
 import com.example.nocturnabrew_mobile.models.OrderRequestItem;
 import com.google.gson.Gson;
 
@@ -62,7 +58,7 @@ public class CartActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        CartAdapter adapter = new CartAdapter(
+        CartManager.CartAdapter adapter = new CartManager.CartAdapter(
                 this,
                 CartManager.getInstance().getItems(),
                 this::updateTotals

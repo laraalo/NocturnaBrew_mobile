@@ -100,7 +100,7 @@
                 android:elevation="4dp"
                 android:fontFamily="serif"
                 android:padding="14dp"
-                android:text="Cancel"
+                android:text="Cancel Order"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
         </LinearLayout>

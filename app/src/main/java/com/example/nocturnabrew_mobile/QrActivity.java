@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import com.example.nocturnabrew_mobile.adapters.CartManager;
 import com.example.nocturnabrew_mobile.api.ApiService;
 import com.example.nocturnabrew_mobile.network.RetrofitInstance;
 import com.example.nocturnabrew_mobile.models.CartItem;
@@ -86,7 +88,14 @@ public class QrActivity extends AppCompatActivity {
         ticketTextView.setText(buildTicketText());
 
         btnGeneratePDFandSendOrder.setOnClickListener(v -> sendOrderToBackend());
-        btnCancelOrder.setOnClickListener(v -> finish());
+        btnCancelOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(QrActivity.this, MenuActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     // ---------------------------------------------------------
@@ -274,6 +283,29 @@ public class QrActivity extends AppCompatActivity {
         pdf.close();
 
     }
+    private void saveOrderToLocal(OrderResponse orderResponse, String email) {
+        SharedPreferences prefs = getSharedPreferences("ORDERS_DB", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        Gson gson = new Gson();
+
+        // Clave única por usuario
+        String key = "orders_" + email;
+
+        // Obtener órdenes existentes
+        String json = prefs.getString(key, "[]");
+
+        Type type = new TypeToken<List<OrderResponse.Order>>(){}.getType();
+        List<OrderResponse.Order> orders = gson.fromJson(json, type);
+
+        // Agregar nueva orden
+        orders.add(orderResponse.getOrder());
+
+        // Guardar de nuevo
+        editor.putString(key, gson.toJson(orders));
+        editor.apply();
+    }
+
 
     // ---------------------------------------------------------
     private void openPdfFile(File file) {
@@ -352,6 +384,10 @@ public class QrActivity extends AppCompatActivity {
                 assert orderResponse != null;
 
                 lastOrderId = orderResponse.getOrder().getOrderId();
+                OrderResponse.Order order = response.body().getOrder();
+                saveOrderToLocal(orderResponse, userEmail);
+
+
 
                 Toast.makeText(QrActivity.this,
                         "Orden creada: " + lastOrderId,
@@ -360,6 +396,9 @@ public class QrActivity extends AppCompatActivity {
                 generatePDF();   // <<<< PDF AUTOMÁTICO
 
                 clearCart(userEmail);
+                Intent intent2 = new Intent(QrActivity.this, MenuActivity.class);
+                startActivity(intent2);
+                finish();
             }
 
             @Override
@@ -374,6 +413,7 @@ public class QrActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("cart_data", MODE_PRIVATE);
         prefs.edit().putString("cart_" + email, "[]").apply();
     }
+
 }
 
 

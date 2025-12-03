@@ -49,7 +49,6 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                //GenericResponse<User> userLoged = response.body().getValues().;
                 if (!response.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, "Error: " + response.code(), Toast.LENGTH_SHORT).show();
                     return;

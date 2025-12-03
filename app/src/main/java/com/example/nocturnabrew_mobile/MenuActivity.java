@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.nocturnabrew_mobile.api.ApiService;
+import com.example.nocturnabrew_mobile.adapters.ProductAdapter;
 import com.example.nocturnabrew_mobile.models.Product;
 import com.example.nocturnabrew_mobile.models.ProductResponse;
 import com.example.nocturnabrew_mobile.network.RetrofitInstance;
@@ -32,7 +32,7 @@ public class MenuActivity extends AppCompatActivity {
     private ProductAdapter adapter;
     private TextView greetingText;
 
-    private ImageButton btnCart, btnIced, btnHot, btnSweet, btnSavory;
+    private ImageButton btnCart, btnIced, btnHot, btnSweet, btnSavory, btnHome;
     private long backPressedTime = 0;
 
     private String userToken;
@@ -83,6 +83,7 @@ public class MenuActivity extends AppCompatActivity {
         btnSweet = findViewById(R.id.btn_sweet);
         btnSavory = findViewById(R.id.btn_savory);
         btnCart = findViewById(R.id.btn_cart);
+        btnHome = findViewById(R.id.btn_home);
 
 
         // Listeners
@@ -91,6 +92,13 @@ public class MenuActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent2 = new Intent(MenuActivity.this, CartActivity.class);
                 startActivity(intent2);
+            }
+        });
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent3 = new Intent(MenuActivity.this, MyOrdersActivity.class);
+                startActivity(intent3);
             }
         });
         btnIced.setOnClickListener(v -> loadProductsByCategory("Iced Favorites"));
