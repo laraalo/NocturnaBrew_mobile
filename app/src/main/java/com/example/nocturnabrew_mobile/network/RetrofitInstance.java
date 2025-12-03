@@ -9,7 +9,8 @@ import  com.example.nocturnabrew_mobile.api.ApiService;
 
 public class RetrofitInstance {
 
-    private static final String BASE_URL = BuildConfig.BASE_URL;
+    private static final String BASE_URL = "http://192.168.61.48:3000";
+            //BuildConfig.BASE_URL;
     private static Retrofit retrofit;
 
     public static Retrofit getRetrofitInstance() {

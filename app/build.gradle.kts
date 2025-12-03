@@ -58,6 +58,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
     implementation ("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation("com.google.zxing:core:3.5.3")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
 
 }

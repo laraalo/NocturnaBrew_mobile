@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Permitir leer en Documents -->
+    <external-path
+        name="documents"
+        path="Documents/NocturnaBrew/" />
+
+    <!-- También permitir todo el Documents si hace falta -->
+    <external-path
+        name="root_docs"
+        path="Documents" />
+
+</paths>
+

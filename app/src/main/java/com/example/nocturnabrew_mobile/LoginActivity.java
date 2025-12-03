@@ -1,7 +1,9 @@
 package com.example.nocturnabrew_mobile;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,20 +45,32 @@ public class LoginActivity extends AppCompatActivity {
     }
     private void LoginAction(){
         LoginRequest userToLogin = new LoginRequest(email.getText().toString(), password.getText().toString());
-        Call<GenericResponse> call = RetrofitInstance.getApiService().loginUser(userToLogin);
-        call.enqueue(new Callback<GenericResponse>() {
+        Call<LoginResponse> call = RetrofitInstance.getApiService().loginUser(userToLogin);
+        call.enqueue(new Callback<LoginResponse>() {
             @Override
-            public void onResponse(Call<GenericResponse> call, Response<GenericResponse> response) {
-                //GenericResponse<User> userLoged = response.body().as;
-                Toast.makeText(LoginActivity.this, "Welcome: ", Toast.LENGTH_LONG).show();
-                Intent intent2 = new Intent(LoginActivity.this, MenuActivity.class);
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                //GenericResponse<User> userLoged = response.body().getValues().;
+                if (!response.isSuccessful()) {
+                    Toast.makeText(LoginActivity.this, "Error: " + response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                User user = response.body().getUser();
+                String token = response.body().getToken();
+                SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
+                prefs.edit()
+                        .putString("USER_TOKEN", token)
+                        .putString("USER_EMAIL", user.getEmail())  // ← GUARDAR EMAIL
+                        .apply();// guardar token y email
+                Toast.makeText(LoginActivity.this, "Welcome: " + user.getName(), Toast.LENGTH_LONG).show();
+                Intent intent2 = new Intent(LoginActivity.this, MenuActivity.class);                intent2.putExtra("userName", user.getName());
+                intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent2);
                 finish();
             }
 
             @Override
-            public void onFailure(Call<GenericResponse> call, Throwable throwable) {
-                Toast.makeText(LoginActivity.this, "Error: ", Toast.LENGTH_LONG).show();
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
 
             }
         });

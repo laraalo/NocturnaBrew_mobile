@@ -33,7 +33,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="0dp"
                 android:fontFamily="@font/playfair_display_bold"
-                android:text="Good morning, @name:"
+                android:text="Good morning, @name"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
@@ -160,100 +160,12 @@
             android:rowOrderPreserved="false"
             android:useDefaultMargins="true">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerProducts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="8dp"/>
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_margin="8dp"
-                android:background="#FFFFFF"
-                card_view:cardCornerRadius="16dp"
-                card_view:cardElevation="6dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="12dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        android:background="@drawable/image_border"
-                        android:clipToOutline="true"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/icedfavorites" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:fontFamily="@font/playfair_display_bold"
-                        android:text="Iced Coffee Frappé"
-                        android:textColor="#4B1E2F"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:ellipsize="end"
-                        android:maxLines="2"
-                        android:text="Chilled coffee blended with ice and cream."
-                        android:textColor="#555555"
-                        android:textSize="8sp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/tv_price"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="$55"
-                            android:textColor="#000000"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                        <ImageButton
-                            android:id="@+id/addButton"
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:contentDescription="Add to cart"
-                            android:src="@android:drawable/ic_input_add"
-                            app:tint="#4B1E2F" />
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Producto 2 -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_margin="8dp"
-                android:background="#FFFFFF"
-                card_view:cardCornerRadius="16dp"
-                card_view:cardElevation="6dp">
-
-            </androidx.cardview.widget.CardView>
-
-            <!-- Producto 3 -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_margin="8dp"
-                android:background="#FFFFFF"
-                card_view:cardCornerRadius="16dp"
-                card_view:cardElevation="6dp"></androidx.cardview.widget.CardView>
         </GridLayout>
     </ScrollView>
 
