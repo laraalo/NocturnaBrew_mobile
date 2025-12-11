@@ -20,6 +20,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.nocturnabrew_mobile.R;
+import com.example.nocturnabrew_mobile.models.CartItem;
 import com.example.nocturnabrew_mobile.models.Product;
 
 import java.util.List;
@@ -84,19 +85,24 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
                 SharedPreferences prefs = context.getSharedPreferences("auth", Context.MODE_PRIVATE);
                 String email = prefs.getString("USER_EMAIL", null);
 
-                CartManager
-                        .getInstance()
-                        .addProduct(product);
+// 1. Obtener la instancia y la lista de ítems actuales.
+                CartManager cartManager = CartManager.getInstance();
+                List<CartItem> currentItems = cartManager.getItems();
 
-                CartManager
-                        .getInstance()
-                        .saveCart(context, email);
+// 2. Verificar si el carrito está vacío.
+                if (currentItems.isEmpty()) {
+                    Toast.makeText(context, product.getName() + " agregado al carrito", Toast.LENGTH_SHORT).show();
+                    cartManager.addProduct(product);
+                } else {
+                    Toast.makeText(context, product.getName() + "Añadiendo producto al carrito existente.", Toast.LENGTH_SHORT).show();
+                    cartManager.addProduct(product);
+                }
+
+// 3. Guardar el estado actualizado del carrito (ya sea nuevo o modificado)
+                cartManager.saveCart(context, email);
 
 
 
-                Toast.makeText(context,
-                        product.getName() + " agregado al carrito",
-                        Toast.LENGTH_SHORT).show();
             });
         }
     }

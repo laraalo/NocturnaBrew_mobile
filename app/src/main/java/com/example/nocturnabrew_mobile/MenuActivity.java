@@ -82,8 +82,8 @@ public class MenuActivity extends AppCompatActivity {
         btnHot = findViewById(R.id.btn_hot);
         btnSweet = findViewById(R.id.btn_sweet);
         btnSavory = findViewById(R.id.btn_savory);
-        btnCart = findViewById(R.id.btn_cart);
-        btnHome = findViewById(R.id.btn_home);
+        btnCart = findViewById(R.id.btn_cartSinceMenu);
+        btnHome = findViewById(R.id.btn_OrdersSinceMenu);
 
 
         // Listeners

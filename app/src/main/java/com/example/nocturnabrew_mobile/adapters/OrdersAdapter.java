@@ -1,6 +1,7 @@
 package com.example.nocturnabrew_mobile.adapters;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,49 +15,92 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.nocturnabrew_mobile.R;
 import com.example.nocturnabrew_mobile.models.OrderResponse;
 
+import java.util.Collections;
 import java.util.List;
 
-public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewHolder> {
+public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder> {
 
     private List<OrderResponse.Order> orders;
-    private OnCancelClickListener cancelListener;
+    private OnOrderCancelListener cancelListener;
 
-    public interface OnCancelClickListener {
-        void onCancel(String orderId);
+    public interface OnOrderCancelListener {
+        void onCancel(String orderId, Button btnCancel, TextView txtStatus);
     }
 
-    public OrdersAdapter(List<OrderResponse.Order> orders, OnCancelClickListener listener) {
+    public OrdersAdapter(List<OrderResponse.Order> orders, OnOrderCancelListener listener) {
+        Collections.reverse(orders); //
         this.orders = orders;
         this.cancelListener = listener;
     }
 
     @NonNull
     @Override
-    public OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_order, parent, false);
-        return new OrderViewHolder(view);
+        return new ViewHolder(v);
     }
 
+    // EN OrdersAdapter.java, dentro de onBindViewHolder
+
+    // EN OrdersAdapter.java, dentro de onBindViewHolder
+
+    // EN OrdersAdapter.java, dentro de onBindViewHolder
+
     @Override
-    public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         OrderResponse.Order order = orders.get(position);
+        // Asegurarse que el estado por defecto sea "pending" si es null
+        String status = order.getStatus() != null ? order.getStatus() : "pending";
 
-        holder.txtOrderId.setText("Order ID: " + order.getOrderId());
-        holder.txtOrderTotal.setText("Total: $" + order.getTotal());
+        // --- CONFIGURACIÓN DE DATOS (SIEMPRE NECESARIA) ---
+        holder.orderId.setText("Order: " + order.getOrderId());
+        holder.total.setText("Total: $" + order.getTotal());
 
-        holder.itemsContainer.removeAllViews();
-
+        StringBuilder sb = new StringBuilder();
         for (OrderResponse.Order.Item item : order.getItems()) {
-            TextView tv = new TextView(holder.itemView.getContext());
-            tv.setText("- " + item.getName() + " x" + item.getQty() + " ($" + item.getSubtotal() + ")");
-            tv.setTextColor(Color.parseColor("#4E342E"));
-            holder.itemsContainer.addView(tv);
+            sb.append(item.getName())
+                    .append(" x")
+                    .append(item.getQty())
+                    .append("\n");
         }
+        holder.items.setText(sb.toString());
 
-        holder.btnCancel.setOnClickListener(v -> {
-            cancelListener.onCancel(order.getOrderId());
-        });
+        // Configura el texto del estado
+        holder.txtStatus.setText(status.toUpperCase());
+        // --------------------------------------------------
+
+        if (status.equals("canceled")) {
+            // --- ESTADO: CANCELADO ---
+
+            // 1. Ocultar el botón y resaltar el texto
+            holder.btnCancel.setVisibility(View.GONE); // Desaparecer el botón
+
+            // 2. Estilos para el estado "CANCELADO"
+            holder.txtStatus.setVisibility(View.VISIBLE);
+            holder.txtStatus.setTextColor(Color.RED);
+            holder.txtStatus.setTypeface(null, Typeface.BOLD);
+
+            // 3. Eliminar el Listener
+            holder.btnCancel.setOnClickListener(null);
+
+        } else {
+            // --- ESTADO: ACTIVO / PENDIENTE ---
+
+            // 1. Mostrar el botón
+            holder.btnCancel.setVisibility(View.VISIBLE);
+
+            // 2. Estilos por defecto
+            holder.txtStatus.setTextColor(Color.BLACK); // Usar el color normal
+            holder.txtStatus.setTypeface(null, Typeface.NORMAL);
+
+            // 3. Configurar el Listener para permitir la cancelación
+            holder.btnCancel.setOnClickListener(v -> {
+                cancelListener.onCancel(order.getOrderId(),
+                        holder.btnCancel,
+                        holder.txtStatus);
+            });
+        }
     }
 
     @Override
@@ -64,18 +108,19 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
         return orders.size();
     }
 
-    public static class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView txtOrderId, txtOrderTotal;
-        LinearLayout itemsContainer;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        TextView orderId, total, items, txtStatus;
         Button btnCancel;
 
-        public OrderViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            txtOrderId = itemView.findViewById(R.id.txt_order_id);
-            txtOrderTotal = itemView.findViewById(R.id.txt_order_total);
-            itemsContainer = itemView.findViewById(R.id.items_container);
-            btnCancel = itemView.findViewById(R.id.btn_cancel_order);
+            orderId = itemView.findViewById(R.id.txtOrderId);
+            total = itemView.findViewById(R.id.txtOrderTotal);
+            items = itemView.findViewById(R.id.txtOrderItems);
+            txtStatus = itemView.findViewById(R.id.txtStatus);
+            btnCancel = itemView.findViewById(R.id.btnCancelOrder);
         }
     }
 }

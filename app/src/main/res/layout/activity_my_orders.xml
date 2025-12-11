@@ -22,39 +22,15 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:fontFamily="@font/playfair_display_bold"
-            android:text="Good morning, @String:"
+            android:text="Good morning"
             android:textColor="#FFFFFF"
             android:textSize="18sp" />
 
-        <ImageButton
-            android:id="@+id/btn_notifications"
-            android:layout_width="34dp"
-            android:layout_height="33dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="31dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="Notifications"
-            android:src="@drawable/ic_notifications" />
-
-        <ImageView
-            android:id="@+id/logo_image"
-            android:layout_width="98dp"
-            android:layout_height="46dp"
-            android:layout_above="@id/btn_notifications"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="-3dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="App Logo"
-            android:scaleType="fitCenter"
-            android:src="@drawable/nb_logo" />
 
     </RelativeLayout>
 
     <!-- CONTENIDO -->
-    <LinearLayout
-        android:id="@+id/orders_content"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -63,10 +39,9 @@
         android:padding="20dp">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_orders"
+            android:id="@+id/recyclerOrders"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="8dp"/>
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
@@ -83,17 +58,7 @@
         android:padding="12dp">
 
         <ImageButton
-            android:id="@+id/btn_home"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_home"
-            android:scaleType="centerInside"
-            android:contentDescription="Home"
-            android:layout_marginHorizontal="25dp" />
-
-        <ImageButton
-            android:id="@+id/btn_menu"
+            android:id="@+id/btn_menuSinceMyOrders"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:background="@android:color/transparent"
@@ -103,7 +68,7 @@
             android:layout_marginHorizontal="25dp" />
 
         <ImageButton
-            android:id="@+id/btn_cart"
+            android:id="@+id/btn_cartSinceMyOrders"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:background="@android:color/transparent"

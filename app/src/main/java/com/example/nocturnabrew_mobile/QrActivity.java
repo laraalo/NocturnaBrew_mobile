@@ -13,16 +13,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-
 import com.example.nocturnabrew_mobile.adapters.CartManager;
 import com.example.nocturnabrew_mobile.api.ApiService;
 import com.example.nocturnabrew_mobile.network.RetrofitInstance;
@@ -34,7 +31,6 @@ import com.google.gson.reflect.TypeToken;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,7 +39,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class QrActivity extends AppCompatActivity {
 
@@ -56,7 +55,8 @@ public class QrActivity extends AppCompatActivity {
     private String userEmail;
     private String userToken;
 
-    private String lastOrderId = "";   // Para generar el PDF y QR
+    private String lastOrderId = "";
+    private boolean orderCompleted = false;   // <<<< NUEVO
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,16 +66,6 @@ public class QrActivity extends AppCompatActivity {
         ticketTextView = findViewById(R.id.ticket_text);
         btnGeneratePDFandSendOrder = findViewById(R.id.btnConfirm);
         btnCancelOrder = findViewById(R.id.btnCancel);
-
-        // Permisos escritura
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    REQ_PERMISSION);
-        }
 
         SharedPreferences authPrefs = getSharedPreferences("auth", MODE_PRIVATE);
         userEmail = authPrefs.getString("USER_EMAIL", "");
@@ -87,18 +77,23 @@ public class QrActivity extends AppCompatActivity {
 
         ticketTextView.setText(buildTicketText());
 
-        btnGeneratePDFandSendOrder.setOnClickListener(v -> sendOrderToBackend());
-        btnCancelOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(QrActivity.this, MenuActivity.class);
-                startActivity(intent);
+        btnGeneratePDFandSendOrder.setOnClickListener(v -> {
+            if (!orderCompleted)
+                sendOrderToBackend();
+            else {
+                startActivity(new Intent(QrActivity.this, MyOrdersActivity.class));
                 finish();
             }
         });
+
+        btnCancelOrder.setOnClickListener(v -> {
+            startActivity(new Intent(QrActivity.this, MenuActivity.class));
+            finish();
+        });
     }
 
-    // ---------------------------------------------------------
+    // ------------------------------------------------------------
+    // TICKET EN PANTALLA
     private String buildTicketText() {
         StringBuilder sb = new StringBuilder();
         sb.append("     NOCTURNA BREW\n");
@@ -121,9 +116,8 @@ public class QrActivity extends AppCompatActivity {
         return sb.toString();
     }
 
-    // ---------------------------------------------------------
-    //   GENERAR QR
-    // ---------------------------------------------------------
+    // ------------------------------------------------------------
+    // GENERAR QR
     private Bitmap generateQR(String text) {
         try {
             BitMatrix matrix = new MultiFormatWriter()
@@ -145,11 +139,9 @@ public class QrActivity extends AppCompatActivity {
         }
     }
 
-    // ---------------------------------------------------------
     private String buildQRText(String orderId) {
 
         StringBuilder sb = new StringBuilder();
-
         sb.append("NOCTURNA BREW\n");
         sb.append("Order #").append(orderId).append("\n\n");
 
@@ -175,9 +167,8 @@ public class QrActivity extends AppCompatActivity {
         return sb.toString();
     }
 
-    // ---------------------------------------------------------
-    //   GENERAR PDF + ABRIRLO
-    // ---------------------------------------------------------
+    // ------------------------------------------------------------
+    // PDF
     private void generatePDF() {
 
         PdfDocument pdf = new PdfDocument();
@@ -257,7 +248,6 @@ public class QrActivity extends AppCompatActivity {
 
             if (!dir.exists()) dir.mkdirs();
 
-            // NOMBRE FINAL DEL ARCHIVO
             String filename = "TICKET_" + lastOrderId + ".pdf";
 
             file = new File(dir, filename);
@@ -270,9 +260,6 @@ public class QrActivity extends AppCompatActivity {
                     "PDF guardado: " + filename,
                     Toast.LENGTH_LONG).show();
 
-            // ----------------------------
-            // ABRIR AUTOMÁTICAMENTE EL PDF
-            // ----------------------------
             openPdfFile(file);
 
         } catch (Exception e) {
@@ -281,33 +268,9 @@ public class QrActivity extends AppCompatActivity {
         }
 
         pdf.close();
-
-    }
-    private void saveOrderToLocal(OrderResponse orderResponse, String email) {
-        SharedPreferences prefs = getSharedPreferences("ORDERS_DB", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        Gson gson = new Gson();
-
-        // Clave única por usuario
-        String key = "orders_" + email;
-
-        // Obtener órdenes existentes
-        String json = prefs.getString(key, "[]");
-
-        Type type = new TypeToken<List<OrderResponse.Order>>(){}.getType();
-        List<OrderResponse.Order> orders = gson.fromJson(json, type);
-
-        // Agregar nueva orden
-        orders.add(orderResponse.getOrder());
-
-        // Guardar de nuevo
-        editor.putString(key, gson.toJson(orders));
-        editor.apply();
     }
 
-
-    // ---------------------------------------------------------
+    // ------------------------------------------------------------
     private void openPdfFile(File file) {
         Uri uri = FileProvider.getUriForFile(
                 this,
@@ -329,17 +292,16 @@ public class QrActivity extends AppCompatActivity {
         }
     }
 
-    // ---------------------------------------------------------
     private String buildDate() {
-        java.text.SimpleDateFormat sdf =
-                new java.text.SimpleDateFormat("M/d/yyyy, hh:mm:ss a");
+        SimpleDateFormat sdf =
+                new SimpleDateFormat("M/d/yyyy, hh:mm:ss a");
 
-        return sdf.format(new java.util.Date());
+        return sdf.format(new Date());
     }
 
-    // ---------------------------------------------------------
+    // ------------------------------------------------------------
     private void sendOrderToBackend() {
-        Log.d("TOKEN", "Token enviado: " + userToken);
+
         List<OrderRequest.Item> backendItems = new ArrayList<>();
         double total = 0;
 
@@ -356,6 +318,7 @@ public class QrActivity extends AppCompatActivity {
 
         ApiService api = RetrofitInstance.getApiService();
         String tokenToSend = "UserToken " + userToken;
+
         Call<OrderResponse> call = api.createOrder(tokenToSend, request);
 
         call.enqueue(new Callback<OrderResponse>() {
@@ -363,42 +326,28 @@ public class QrActivity extends AppCompatActivity {
             public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
 
                 if (!response.isSuccessful()) {
-
-                    String backendError = "";
-                    try {
-                        backendError = response.errorBody().string();
-                    } catch (Exception e) {
-                        backendError = "No se pudo leer el error";
-                    }
-
                     Toast.makeText(QrActivity.this,
-                            "Error al crear orden:\n" + backendError,
-                            Toast.LENGTH_LONG).show();
-
-                    Log.e("ORDER_ERROR", backendError);
+                            "Error al crear la orden", Toast.LENGTH_LONG).show();
                     return;
                 }
 
-                // ORDEN CREADA CORRECTAMENTE
                 OrderResponse orderResponse = response.body();
-                assert orderResponse != null;
-
                 lastOrderId = orderResponse.getOrder().getOrderId();
-                OrderResponse.Order order = response.body().getOrder();
+
                 saveOrderToLocal(orderResponse, userEmail);
 
+                clearCart(userEmail);
 
+                orderCompleted = true;
+
+                btnGeneratePDFandSendOrder.setText("Back to My Orders");
+                btnCancelOrder.setText("Back to Home");
+
+                generatePDF();
 
                 Toast.makeText(QrActivity.this,
-                        "Orden creada: " + lastOrderId,
-                        Toast.LENGTH_LONG).show();
-
-                generatePDF();   // <<<< PDF AUTOMÁTICO
-
+                        "Orden creada correctamente", Toast.LENGTH_LONG).show();
                 clearCart(userEmail);
-                Intent intent2 = new Intent(QrActivity.this, MenuActivity.class);
-                startActivity(intent2);
-                finish();
             }
 
             @Override
@@ -409,11 +358,37 @@ public class QrActivity extends AppCompatActivity {
         });
     }
 
-    private void clearCart(String email) {
-        SharedPreferences prefs = getSharedPreferences("cart_data", MODE_PRIVATE);
-        prefs.edit().putString("cart_" + email, "[]").apply();
+    // ------------------------------------------------------------
+    private void saveOrderToLocal(OrderResponse orderResponse, String email) {
+        SharedPreferences prefs = getSharedPreferences("ORDERS_DB", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        Gson gson = new Gson();
+        String key = "orders_" + email;
+
+        String json = prefs.getString(key, "[]");
+
+        Type type = new TypeToken<List<OrderResponse.Order>>(){}.getType();
+        List<OrderResponse.Order> orders = gson.fromJson(json, type);
+
+        orders.add(orderResponse.getOrder());
+
+        editor.putString(key, gson.toJson(orders));
+        editor.apply();
     }
 
+
+
+    private void clearCart(String email) {
+        // ELIMINA todo el código manual de SharedPreferences que tenías aquí.
+        // Solo llama al manager:
+        CartManager.getInstance().clearAndSaveCart(this, email);
+
+
+    }
 }
+
+
+
 
 

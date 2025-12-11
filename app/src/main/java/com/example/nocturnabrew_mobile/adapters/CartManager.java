@@ -20,6 +20,8 @@ import com.google.gson.reflect.TypeToken;
 
 
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +41,7 @@ public class CartManager {
         return instance;
     }
 
-    // Añadir productos al carrito
+    // Añadir productos
     public void addProduct(Product product) {
         for (CartItem item : cartItems) {
             if (item.getProduct().getProductId() == product.getProductId()) {
@@ -47,26 +49,24 @@ public class CartManager {
                 return;
             }
         }
-
         cartItems.add(new CartItem(product, 1));
     }
 
-    // Remover item completo
+    // Remover por productId (entero)
     public void removeProduct(int productId) {
         cartItems.removeIf(item -> item.getProduct().getProductId() == productId);
     }
 
-    // Vaciar carrito
-    public void clearCart() {
+    // Limpiar carrito completo
+    public void clearAndSaveCart(Context context, String userEmail) {
         cartItems.clear();
+        saveCart(context, userEmail);
     }
 
-    // Obtener lista
     public List<CartItem> getItems() {
         return cartItems;
     }
 
-    // Subtotal local
     public double getSubtotal() {
         double subtotal = 0;
         for (CartItem item : cartItems) {
@@ -75,27 +75,45 @@ public class CartManager {
         return subtotal;
     }
 
-    // IVA local (16%)
     public double getIVA() {
-        return getSubtotal() * 0.16;
+        // 1. Calcular el IVA
+        double ivaCalculado = getSubtotal() * 0.16;
+
+        // 2. Redondear el IVA a dos decimales
+        BigDecimal bd = new BigDecimal(ivaCalculado);
+        // Usamos setScale para redondear a 2 decimales (ej. 34.08)
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+
+        return bd.doubleValue(); // Devuelve 34.08 (preciso)
     }
 
-    // Total local
     public double getTotal() {
-        return getSubtotal() + getIVA();
-    }
+        // 1. Convertir los valores a BigDecimal para sumar sin error de precisión
+        BigDecimal subtotalBD = new BigDecimal(getSubtotal());
+        BigDecimal ivaBD = new BigDecimal(getIVA()); // Usa el IVA ya redondeado
 
-    // Para enviar al backend
+        // 2. Realizar la suma (BigDecimal.add())
+        BigDecimal totalBD = subtotalBD.add(ivaBD);
+
+        // 3. Redondear el resultado final a 2 decimales para asegurar la precisión final
+        totalBD = totalBD.setScale(2, RoundingMode.HALF_UP);
+
+        // 4. Devolver el resultado
+        return totalBD.doubleValue();
+    }
+    // Para backend
     public List<OrderRequestItem> getOrderItemsForBackend() {
         List<OrderRequestItem> list = new ArrayList<>();
         for (CartItem item : cartItems) {
             list.add(new OrderRequestItem(
-                    item.getProduct().getProductId(), // el ID que tu backend usa
+                    item.getProduct().getProductId(),
                     item.getQuantity()
             ));
         }
         return list;
     }
+
+    // Guardar carrito en SharedPreferences
     public void saveCart(Context context, String userEmail) {
         SharedPreferences prefs = context.getSharedPreferences("CART_PREFS", Context.MODE_PRIVATE);
         Gson gson = new Gson();
@@ -103,6 +121,7 @@ public class CartManager {
         prefs.edit().putString("CART_USER_" + userEmail, json).apply();
     }
 
+    // Cargar carrito
     public void loadCart(Context context, String userEmail) {
         SharedPreferences prefs = context.getSharedPreferences("CART_PREFS", Context.MODE_PRIVATE);
         String json = prefs.getString("CART_USER_" + userEmail, null);
@@ -116,6 +135,8 @@ public class CartManager {
             cartItems.addAll(savedList);
         }
     }
+
+    // ------------------ ADAPTER ------------------ //
 
     public static class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
@@ -148,27 +169,31 @@ public class CartManager {
                     .load(item.getProduct().getUrl())
                     .into(holder.image);
 
+            // + Cantidad
             holder.btnIncrease.setOnClickListener(v -> {
                 item.increaseQuantity();
                 notifyItemChanged(position);
                 onTotalsChanged.run();
             });
 
+            // - Cantidad
             holder.btnDecrease.setOnClickListener(v -> {
                 if (item.getQuantity() > 1) {
                     item.decreaseQuantity();
+                    notifyItemChanged(position);
                 } else {
-                    getInstance().removeProduct(item.getProduct().getProductId());
+                    CartManager.getInstance().removeProduct(item.getProduct().getProductId());
                     notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, cartItems.size());
                 }
-                notifyDataSetChanged();
                 onTotalsChanged.run();
             });
 
+            //  Eliminar item
             holder.btnRemove.setOnClickListener(v -> {
-                getInstance().removeProduct(item.getProduct().getProductId());
+                CartManager.getInstance().removeProduct(item.getProduct().getProductId());
                 notifyItemRemoved(position);
-                notifyDataSetChanged();
+                notifyItemRangeChanged(position, cartItems.size());
                 onTotalsChanged.run();
             });
         }
@@ -179,7 +204,6 @@ public class CartManager {
         }
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
-
             ImageView image;
             TextView name, price, qty;
             ImageButton btnIncrease, btnDecrease, btnRemove;
@@ -198,4 +222,6 @@ public class CartManager {
         }
     }
 }
+
+
 

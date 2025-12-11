@@ -6,6 +6,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Body;
 import retrofit2.http.Path;
@@ -30,5 +31,12 @@ public interface ApiService {
             @Header("auth-user") String token,
             @Body OrderRequest order
     );
+    @PATCH("api/ticket/updateStatus/{orderId}")
+    Call<GenericResponse> updateOrderStatus(
+            @Header("auth-user") String userToken,
+            @Path("orderId") String orderId,
+            @Body UpdateStatusRequest statusRequest
+    );
+
 
 }

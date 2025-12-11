@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
@@ -23,21 +24,16 @@ public class CartActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TextView txtSubtotal, txtIVA, txtTotal;
     private Button btnPay, btnBack;
+    private ImageButton btnMenu, btnOrders;
 
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                Intent intent = new Intent(CartActivity.this, MenuActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+
         SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
-        String email = prefs.getString("USER_EMAIL", null);
+        email = prefs.getString("USER_EMAIL", null);
 
         CartManager.getInstance().loadCart(this, email);
 
@@ -55,46 +51,59 @@ public class CartActivity extends AppCompatActivity {
         txtTotal = findViewById(R.id.PriceTotal);
         btnPay = findViewById(R.id.btnPay);
         btnBack = findViewById(R.id.btnback);
-
+        btnMenu = findViewById(R.id.btn_menuSinceCart);
+        btnOrders = findViewById(R.id.btn_OrdersSinceCart);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         CartManager.CartAdapter adapter = new CartManager.CartAdapter(
                 this,
                 CartManager.getInstance().getItems(),
-                this::updateTotals
+                this::refreshTotals
         );
 
         recyclerView.setAdapter(adapter);
 
-        updateTotals();
+        refreshTotals();
 
+        btnPay.setOnClickListener(v -> enviarOrdenBackend());
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(CartActivity.this, android.R.menu.class);
-                startActivity(intent2);
+                Intent i = new Intent(CartActivity.this, MenuActivity.class);
+                startActivity(i);
             }
         });
-
-        btnPay.setOnClickListener(v -> {
-            enviarOrdenBackend();
+        btnMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i2 = new Intent(CartActivity.this, MenuActivity.class);
+                startActivity(i2);
+            }
+        });
+        btnOrders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i3 = new Intent(CartActivity.this, MenuActivity.class);
+                startActivity(i3);
+            }
         });
     }
 
-    private void updateTotals() {
+    private void refreshTotals() {
         txtSubtotal.setText("Subtotal: $" + CartManager.getInstance().getSubtotal());
         txtIVA.setText("IVA: $" + CartManager.getInstance().getIVA());
         txtTotal.setText("Total: $" + CartManager.getInstance().getTotal());
+
+        if (CartManager.getInstance().getItems().isEmpty()) {
+            startActivity(new Intent(this, CartEmptyActivity.class));
+            finish();
+        }
+
+        CartManager.getInstance().saveCart(this, email);
     }
 
     private void enviarOrdenBackend() {
-        List<OrderRequestItem> payload = CartManager.getInstance().getOrderItemsForBackend();
-
         Intent i = new Intent(this, QrActivity.class);
-        i.putExtra("order_items", new Gson().toJson(payload));
-        i.putExtra("order_total", CartManager.getInstance().getTotal());
         startActivity(i);
     }
-
-
 }

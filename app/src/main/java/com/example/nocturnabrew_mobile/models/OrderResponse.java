@@ -31,6 +31,8 @@ public class OrderResponse {
 
         @SerializedName("items")
         private List<Item> items;
+        private String status = "pending";
+
 
         public String getOrderId() {
             return orderId;
@@ -42,6 +44,13 @@ public class OrderResponse {
 
         public List<Item> getItems() {
             return items;
+        }
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
         }
 
         public static class Item {
